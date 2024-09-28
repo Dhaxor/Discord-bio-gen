@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/components/ui/use-toast"
 
@@ -47,12 +47,20 @@ export default function DiscordBioGenerator() {
         })
       }
       setIsSubscribed(true)
-    } catch (error: any) {
-      toast({
-        title: "Error subscribing",
-        description: error.message || "Please try again later.",
-        variant: "destructive",
-      })
+    } catch (error: unknown) {
+     if (error instanceof Error) {
+        toast({
+          title: "Error subscribing",
+          description: error.message || "Please try again later.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error subscribing",
+          description: "An unexpected error occurred. Please try again later.",
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsSubscribing(false)
     }
@@ -89,6 +97,7 @@ export default function DiscordBioGenerator() {
         description: "Check out your new Discord bio below.",
       })
     } catch (error) {
+      console.error(error)
       toast({
         title: "Error generating bio",
         description: "Please try again later.",
